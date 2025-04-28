@@ -1,8 +1,10 @@
 # prerequisites
 
-This script is assuming you already have generated your GitHub SSH keys and set them up. If you have not please follow the instructions from the official GitHub docs: https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+This script is assuming you already have generated your GitHub SSH keys and set them up. If you have not please follow the instructions from the official GitHub docs: https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent .
 
-Insure that you have the package less installed on your Linux machine.
+
+
+Insure that you have the package less installed on your Linux machine, and that your private SSH key has the correct permissions
 
 
 # ssh-to-git-key-automation
