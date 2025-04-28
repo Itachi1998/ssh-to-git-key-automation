@@ -8,8 +8,7 @@ Insure that you have the package less installed on your Linux machine, and that 
 
 
 # ssh-to-git-key-automation
-This script automatically runs the ssh-agent and adds the specified private key to it! saving you the time of having to ssh-agent -s and ssh-add your key manually. 
-This scripts assume you alreay have git installed on your linux system, and have already configured the ssh key for your account
+This script automatically runs the ssh-agent and adds the specified private key to it! saving you the time of having to troubleshoot the ssh to GitHub process. It terminates the SSH process with an exit trap, insuring that it doesn't stay running in the background.
 
 To run the script:
 
