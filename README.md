@@ -18,6 +18,7 @@ The supported git commands currently are:
 - fetch
 - pull
 - merge
+- status
 - push
 
 other commands:
