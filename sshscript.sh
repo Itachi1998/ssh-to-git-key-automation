@@ -99,7 +99,7 @@ while true; do
 				git checkout main
 				if [ $? -eq 0 ]; then
 					echo "Merging branch $MERGE_BRANCH to main"
-					git merge "$MERGE_BRANCH"
+					git merge "$MERGE_BRANCH" --allow-unrelated-histories
 					if [ ?# -eq -0 ]; then
 						echo "Successfully merged branch '$MERGE_BRANCH' into main locally"
 					
