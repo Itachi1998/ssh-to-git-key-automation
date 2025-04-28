@@ -1,6 +1,4 @@
 #!/bin/bash
-
-# attempt to start ssh-agent, check exit status
 cleanup_ssh_agent() {
 	if [ -n "$SSH_AGENT_PID" ] && kill -0 "$SSH_AGENT_PID" > /dev/null 2>&1; then
 		echo "Terminating ssh-agent (PID: $SSH_AGENT_PID) ... "
