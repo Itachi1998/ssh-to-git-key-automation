@@ -1,3 +1,8 @@
+# prerequisites
+This script is assuming you already have your GitHub SSH keys set up. If you do not please follow the instructions from the official GitHub link:
+
+
+
 # ssh-to-git-key-automation
 This script automatically runs the ssh-agent and adds the specified private key to it! saving you the time of having to ssh-agent -s and ssh-add your key manually. 
 This scripts assume you alreay have git installed on your linux system, and have already configured the ssh key for your account
