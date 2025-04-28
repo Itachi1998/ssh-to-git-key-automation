@@ -1,6 +1,8 @@
 # prerequisites
-This script is assuming you already have your GitHub SSH keys set up. If you do not please follow the instructions from the official GitHub link:
 
+This script is assuming you already have generated your GitHub SSH keys and set them up. If you have not please follow the instructions from the official GitHub docs: https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+
+Insure that you have less installed on your Linux machine.
 
 
 # ssh-to-git-key-automation
