@@ -52,7 +52,7 @@ fi
 echo "Successfully set up SSH to GitHub authentication"
 
 while true; do
-	read -p "What would you like to do next? (clone, fetch, push, test, status, merge, commit, pull, exit):" ACTION
+	read -p "What would you like to do next? (clone, fetch, push, test, status, merge, pull, exit):" ACTION
 
 	case "$ACTION" in
 		pull)
