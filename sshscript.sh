@@ -1,6 +1,16 @@
 #!/bin/bash
 
 # attempt to start ssh-agent, check exit status
+cleanup_ssh_agent() {
+	if [ -n "$SSH_AGENT_PID" ] && kill -0 "$SSH_AGENT_PID" > /dev/null 2>&1; then
+		echo "Terminating ssh-agent (PID: $SSH_AGENT_PID) ... "
+		kill "$SSH_AGENT_PID"
+		wait "$SSH_AGENT_PID" 2> /dev/null #wait for process to terminate
+		echo "ssh-agent terminated."
+	fi
+}
+
+trap cleanup_ssh_agent EXIT
 
 if eval "$(ssh-agent)"; then
 	echo "Started ssh-agent successfully (PID: $SSH_AGENT_PID)"
@@ -39,6 +49,85 @@ else
 	fi
 fi
 
-echo "Checking GitHub connection..."
+echo "Successfully set up SSH to GitHub authentication"
 
-ssh -T git@github.com
+while true; do
+	read -p "What would you like to do next? (clone, fetch, push, test, status, merge, commit, exit):" ACTION
+
+	case "$ACTION" in
+		clone)
+			read -p "Enter SSH URL of the repository to clone: " CLONE_URL
+			if [ -n "$CLONE_URL" ]; then
+				git clone "$CLONE_URL"
+			else
+				echo "Clone URL cannot be empty."
+			fi
+			;;
+		fetch)
+			read -p "Enter the remote name (defaults to: origin): " REMOTE_FETCH
+			REMOTE_FETCH="${REMOTE_FETCH:-origin}"
+			git fetch "$REMOTE_FETCH"
+			;;
+		push)
+			read -p "Enter the remote name (defaults to: origin): " REMOTE_PUSH
+			REMOTE_PUSH = "${REMOTE_PUSH:-origin}"
+			read -p "Enter the remote branch to push to (e.g., main): " BRANCH_PUSH
+			if [ -n "$BRANCH_PUSH" ]; then
+				git push "$REMOTE_PUSH" "$BRANCH_PUSH"
+			
+			else
+				echo "Branch name cannot be empty"
+			fi
+			;;
+		status)
+			git status
+			;;
+		test)
+			ssh -T git@github.com
+			;;
+		merge)
+			read -p "Enter branch to merge into main: " MERGE_BRANCH
+			if [ -n "$MERGE_BRANCH" ]; then
+				echo "Checking out main.."
+				git checkout main
+				if [ $? -eq 0 ]; then
+					echo "Merging branch $MERGE_BRANCH to main"
+					git merge "$MERGE_BRANCH"
+					if [ ?# -eq -0 ]; then
+						echo "Successfully merged branch '$MERGE_BRANCH' into main locally"
+					
+						read -p "Would you like to push the updated main to the remote? (yes/no): " PUSH_MAIN
+						if [[ "$PUSH_MAIN" == "yes" || "$PUSH_MAIN" == "y" || "$PUSH_MAIN" == "Y" ]]; then
+							read -p "Enter the remote name (defaults to: origin): " REMOTE_PUSH_MAIN
+							REMOTE_PUSH_MAIN = "${REMOTE_PUSH_MAIN:-origin}"
+							git push "$REMOTE_PUSH_MAIN" main
+							echo "Pushed updated main to '$REMOTE_PUSH_MAIN'"
+						elif [[ "$PUSH_MAIN" == "no" || "$PUSH_MAIN" == "n" || "$PUSH_MAIN" == "N" ]]; then
+							echo "Not pushing the updated main."
+						else 
+							echo "Error: Invalid input, not pushing updated main."
+						fi
+					else
+						echo "Error: Error during merge, you may need to manually resolve conflicts."
+					fi
+				else
+					echo "Error: Error with checking out main branch"
+				fi
+			else
+				echo "Error: Branch name to merge cannot be empty."
+
+						
+			fi
+			;;
+		exit)
+			echo "Exiting."
+			break
+			;;
+		*)
+			echo "Invalid action. Please choose from clone, fetch, push, status, test, or exit."
+			;;
+	esac
+done
+
+
+				
