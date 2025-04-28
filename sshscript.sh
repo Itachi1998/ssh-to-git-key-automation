@@ -52,9 +52,16 @@ fi
 echo "Successfully set up SSH to GitHub authentication"
 
 while true; do
-	read -p "What would you like to do next? (clone, fetch, push, test, status, merge, commit, exit):" ACTION
+	read -p "What would you like to do next? (clone, fetch, push, test, status, merge, commit, pull, exit):" ACTION
 
 	case "$ACTION" in
+		pull)
+			read -p "Enter the remote name (default: origin): " NAME
+			NAME = "${NAME:-origin}"
+			read -p "Enter the branch (defaut: current): " BRANCH
+			BRANCH = "${BRANCH:-$(git rev-parse --abrev-ref HEAD)}"
+			git pull "$NAME" "$BRANCH"
+			;;
 		clone)
 			read -p "Enter SSH URL of the repository to clone: " CLONE_URL
 			if [ -n "$CLONE_URL" ]; then
