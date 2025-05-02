@@ -59,7 +59,7 @@ while true; do
 			read -p "Enter the remote name (default: origin): " NAME
 			NAME="${NAME:-origin}"
 			read -p "Enter the branch (defaut: current): " BRANCH
-			BRANCH="${BRANCH:-$(git rev-parse --abrev-ref HEAD)}"
+			BRANCH="${BRANCH:-$(git rev-parse HEAD)}"
 			git pull "$NAME" "$BRANCH"
 			;;
 		clone)
