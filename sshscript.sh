@@ -55,9 +55,9 @@ while true; do
 	case "$ACTION" in
 		pull)
 			read -p "Enter the remote name (default: origin): " NAME
-			NAME = "${NAME:-origin}"
+			NAME="${NAME:-origin}"
 			read -p "Enter the branch (defaut: current): " BRANCH
-			BRANCH = "${BRANCH:-$(git rev-parse --abrev-ref HEAD)}"
+			BRANCH="${BRANCH:-$(git rev-parse HEAD)}"
 			git pull "$NAME" "$BRANCH"
 			;;
 		clone)
@@ -75,7 +75,7 @@ while true; do
 			;;
 		push)
 			read -p "Enter the remote name (defaults to: origin): " REMOTE_PUSH
-			REMOTE_PUSH = "${REMOTE_PUSH:-origin}"
+			REMOTE_PUSH="${REMOTE_PUSH:-origin}"
 			read -p "Enter the remote branch to push to (e.g., main): " BRANCH_PUSH
 			if [ -n "$BRANCH_PUSH" ]; then
 				git push "$REMOTE_PUSH" "$BRANCH_PUSH"
@@ -102,12 +102,13 @@ while true; do
 						echo "Successfully merged branch '$MERGE_BRANCH' into main locally"
 					
 						read -p "Would you like to push the updated main to the remote? (yes/no): " PUSH_MAIN
-						if [[ "$PUSH_MAIN" == "yes" || "$PUSH_MAIN" == "y" || "$PUSH_MAIN" == "Y" ]]; then
+						PUSH_MAIN="${PUSH_MAIN,,}"
+						if [[ "$PUSH_MAIN" == "yes" || "$PUSH_MAIN" == "y" ]]; then
 							read -p "Enter the remote name (defaults to: origin): " REMOTE_PUSH_MAIN
-							REMOTE_PUSH_MAIN = "${REMOTE_PUSH_MAIN:-origin}"
+							REMOTE_PUSH_MAIN="${REMOTE_PUSH_MAIN:-origin}"
 							git push "$REMOTE_PUSH_MAIN" main
 							echo "Pushed updated main to '$REMOTE_PUSH_MAIN'"
-						elif [[ "$PUSH_MAIN" == "no" || "$PUSH_MAIN" == "n" || "$PUSH_MAIN" == "N" ]]; then
+						elif [[ "$PUSH_MAIN" == "no" || "$PUSH_MAIN" == "n" ]]; then
 							echo "Not pushing the updated main."
 						else 
 							echo "Error: Invalid input, not pushing updated main."
@@ -124,6 +125,8 @@ while true; do
 						
 			fi
 			;;
+
+
 		exit)
 			echo "Exiting."
 			break
