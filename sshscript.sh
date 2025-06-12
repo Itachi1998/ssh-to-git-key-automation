@@ -10,12 +10,8 @@ cleanup_ssh_agent() {
 
 trap cleanup_ssh_agent EXIT
 
-if eval "$(ssh-agent)"; then
-	echo "Started ssh-agent successfully (PID: $SSH_AGENT_PID)"
-else
-	echo "Error failed to start ssh-agent"
-	exit 1
-fi
+eval "$(ssh-agent)" && echo "Started ssh-agent successfully (PID: $SSH_AGENT_PID)" || echo "Error failed to start ssh-agent"; exit 1
+	
 
 #prompt fo SSH key path (private)
 read -p "Enter your private ssh key absolute path: " KEY_PATH
