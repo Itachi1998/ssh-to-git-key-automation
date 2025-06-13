@@ -1,13 +1,7 @@
 #!/bin/bash
 cleanup_ssh_agent() {
-	if [ -n "$SSH_AGENT_PID" ] && kill -0 "$SSH_AGENT_PID" > /dev/null 2>&1; then
-		echo "Terminating ssh-agent (PID: $SSH_AGENT_PID) ... "
-		kill "$SSH_AGENT_PID"
-		wait "$SSH_AGENT_PID" 2> /dev/null #wait for process to terminate
-		echo "ssh-agent terminated."
-	fi
+	[ -n "$SSH_AGENT_PID" ] && kill -0 "$SSH_AGENT_PID" > /dev/null 2>&1; echo "Terminating ssh-agent (PID: $SSH_AGENT_PID) ... ";kill "$SSH_AGENT_PID";wait "$SSH_AGENT_PID" 2> /dev/null || echo "ssh-agent terminated."
 }
-
 trap cleanup_ssh_agent EXIT
 
 eval "$(ssh-agent)" && echo "Started ssh-agent successfully (PID: $SSH_AGENT_PID)" || echo "Error failed to start ssh-agent"; exit 1
