@@ -30,14 +30,11 @@ read -p "Enter your private ssh key absolute path: " KEY_PATH
 
 
 # check if github ssh key is added to ssh-agent
-ssh-add -l | grep -q "$(basename "$KEY_PATH")" && echo "GitHub SSH key at '$KEY_PATH'..." ||
-	{
-	[ -f "$KEY_PATH" ] && 
+ssh-add -l | grep -q "$(basename "$KEY_PATH")" && echo "GitHub SSH key at '$KEY_PATH'..." || [ -f "$KEY_PATH" ] && 
  		{
 		echo "Adding GitHub SSH key from '$KEY_PATH'...";
 		ssh-add "$KEY_PATH";
-		[ $? -eq 0 ] && 
-  			echo "GitHub key added successfully." ||
+		[ $? -eq 0 ] && echo "GitHub key added successfully." ||
      			{
 			echo "Error adding SSH key, ensure the SSH key exists, is valid, and you've entered the correct passphrase if required";
 			exit 3
@@ -49,7 +46,7 @@ ssh-add -l | grep -q "$(basename "$KEY_PATH")" && echo "GitHub SSH key at '$KEY_
 		echo "You can follow GitHub's guide: https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent";
 		exit 4
   		}
-    }
+    
 
 echo "Successfully set up SSH to GitHub authentication"
 
