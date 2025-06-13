@@ -29,12 +29,12 @@ echo "Adding GitHub SSH key from '$KEY_PATH'...";
 ssh-add "$KEY_PATH";
 [ $? -eq 0 ] && echo "GitHub key added successfully."||{
 echo "Error adding SSH key, ensure the SSH key exists, is valid, and you've entered the correct passphrase if required";
-exit 1
+exit 3
 }} ||{
 echo "GitHub SSH private key not found at: $KEY_PATH";
 echo "Please make sure the path is correct or generate an SSH key and add it to your GitHub account.";
 echo "You can follow GitHub's guide: https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent";
-exit 1;}}
+exit 4;}}
 
 echo "Successfully set up SSH to GitHub authentication"
 
@@ -87,7 +87,7 @@ while true; do
 				if [ $? -eq 0 ]; then
 					echo "Merging branch $MERGE_BRANCH to main"
 					git merge "$MERGE_BRANCH" --allow-unrelated-histories
-					if [ $? -eq -0 ]; then
+					if [ $? -eq 0 ]; then
 						echo "Successfully merged branch '$MERGE_BRANCH' into main locally"
 					
 						read -p "Would you like to push the updated main to the remote? (yes/no): " PUSH_MAIN
