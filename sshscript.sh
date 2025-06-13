@@ -1,41 +1,40 @@
 #!/bin/bash
 cleanup_ssh_agent() {
-	[ -n "$SSH_AGENT_PID" ] && kill -0 "$SSH_AGENT_PID" > /dev/null 2>&1; echo "Terminating ssh-agent (PID: $SSH_AGENT_PID) ... ";kill "$SSH_AGENT_PID";wait "$SSH_AGENT_PID" 2> /dev/null || echo "ssh-agent terminated."
+    [ -n "$SSH_AGENT_PID" ] && {
+ kill -0 "$SSH_AGENT_PID" > /dev/null 2>&1; 
+ echo "Terminating ssh-agent (PID: $SSH_AGENT_PID) ... ";
+ kill "$SSH_AGENT_PID";
+ wait "$SSH_AGENT_PID" 2> /dev/null;
+ echo "ssh-agent terminated." }
 }
 trap cleanup_ssh_agent EXIT
 
-eval "$(ssh-agent)" && echo "Started ssh-agent successfully (PID: $SSH_AGENT_PID)" || echo "Error failed to start ssh-agent"; exit 1
-	
-
+eval "$(ssh-agent)" && echo "Started ssh-agent successfully (PID: $SSH_AGENT_PID)" || { 
+echo "Error failed to start ssh-agent";
+exit 1}
+    
 #prompt fo SSH key path (private)
 read -p "Enter your private ssh key absolute path: " KEY_PATH
 
 #check if prompt returns empty
-if [ -z "$KEY_PATH" ]; then
-	echo "Key path cannot be empty. Please provide the path to your private key."
-	exit 1
-fi
+[ -z "$KEY_PATH" ] && {
+echo "Key path cannot be empty. Please provide the path to your private key."; 
+exit 2}
+
 
 # check if github ssh key is added to ssh-agent
-if ssh-add -l | grep -q "$(basename "$KEY_PATH")"; then
-	echo "GitHub SSH key at '$KEY_PATH'..."
-else
-	if [ -f "$KEY_PATH" ]; then
-		echo "Adding GitHub SSH key from '$KEY_PATH'..."
-		ssh-add "$KEY_PATH"
-		if [ $? -eq 0 ]; then
-			echo "GitHub key added successfully."
-		else
-			echo "Error adding SSH key, ensure the SSH key exists, is valid, and you've entered the correct passphrase if required"
-			exit 1
-		fi
-	else
-		echo "GitHub SSH private key not found at: $KEY_PATH"
-		echo "Please make sure the path is correct or generate an SSH key and add it to your GitHub account."
-		echo "You can follow GitHub's guide: https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent"
-		exit 1
-	fi
-fi
+ssh-add -l | grep -q "$(basename "$KEY_PATH")" && echo "GitHub SSH key at '$KEY_PATH'..." || {
+[ -f "$KEY_PATH" ] && {
+echo "Adding GitHub SSH key from '$KEY_PATH'...";
+ssh-add "$KEY_PATH";
+[ $? -eq 0 ] && echo "GitHub key added successfully."||{
+echo "Error adding SSH key, ensure the SSH key exists, is valid, and you've entered the correct passphrase if required";
+exit 1
+}} ||{
+echo "GitHub SSH private key not found at: $KEY_PATH";
+echo "Please make sure the path is correct or generate an SSH key and add it to your GitHub account.";
+echo "You can follow GitHub's guide: https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent";
+exit 1;}}
 
 echo "Successfully set up SSH to GitHub authentication"
 
